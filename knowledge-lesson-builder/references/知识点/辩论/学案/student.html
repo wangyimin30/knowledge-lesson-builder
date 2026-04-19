@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>辩论学案（学生版）</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #e8eef6;
+      font-family: 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Segoe UI', sans-serif;
+      line-height: 1.75;
+      padding: 28px 16px;
+      color: #1e293b;
+    }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px 40px 48px;
+      box-shadow: 0 4px 32px rgba(30, 60, 100, 0.12);
+    }
+
+    /* ── 页眉 ── */
+    .page-header { margin-bottom: 32px; }
+    .page-header h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: #0f172a;
+      border-left: 6px solid #2563eb;
+      padding-left: 18px;
+      margin-bottom: 14px;
+    }
+    .meta-row { display: flex; gap: 12px; flex-wrap: wrap; padding-left: 24px; }
+    .meta-row span {
+      background: #eff6ff;
+      color: #1d4ed8;
+      padding: 4px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+    .meta-row .version-badge { background: #dcfce7; color: #15803d; }
+
+    /* ── 工具栏 ── */
+    .toolbar { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+    .btn-print {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .btn-print:hover { background: #1d4ed8; }
+
+    /* ── 课标条 ── */
+    .standard-bar {
+      background: linear-gradient(135deg, #fefce8, #fef9c3);
+      border-left: 5px solid #ca8a04;
+      border-radius: 16px;
+      padding: 16px 22px;
+      margin-bottom: 28px;
+    }
+    .standard-bar .bar-title { color: #92400e; font-weight: 700; font-size: 0.9rem; margin-bottom: 7px; }
+    .standard-bar p { color: #713f12; font-size: 0.94rem; line-height: 1.7; }
+
+    /* ── 概览 ── */
+    .overview {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-radius: 16px;
+      padding: 18px 24px;
+      margin-bottom: 36px;
+    }
+    .overview .ov-title { color: #0369a1; font-weight: 700; margin-bottom: 9px; font-size: 0.95rem; }
+    .overview p { color: #0c4a6e; font-size: 0.94rem; }
+
+    /* ── 模块 ── */
+    .module { border: 1px solid #e2e8f0; border-radius: 20px; margin-bottom: 36px; overflow: hidden; }
+    .module-header {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%);
+      padding: 18px 26px 16px;
+    }
+    .module-header h2 {
+      color: #ffffff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: rgba(255, 255, 255, 0.20);
+      color: #ffffff;
+      font-size: 0.78rem;
+      padding: 3px 11px;
+      border-radius: 20px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .module-goal { color: #bfdbfe; font-size: 0.88rem; margin-top: 6px; padding-left: 2px; }
+
+    /* ── 知识要点 ── */
+    .knowledge {
+      background: #fffbeb;
+      border-bottom: 1px solid #fde68a;
+      padding: 20px 26px;
+    }
+    .knowledge h3 { color: #b45f06; font-weight: 700; font-size: 0.95rem; margin-bottom: 12px; }
+    .knowledge p { color: #44403c; font-size: 0.95rem; margin-bottom: 8px; }
+    .knowledge ul { padding-left: 22px; margin-top: 8px; }
+    .knowledge li { color: #44403c; font-size: 0.95rem; margin-bottom: 6px; line-height: 1.75; }
+    .knowledge strong { color: #92400e; }
+
+    /* ── 真题训练 ── */
+    .practice { padding: 20px 26px 28px; }
+    .practice-title {
+      color: #0f172a;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed #e2e8f0;
+    }
+    .exam-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 18px 22px;
+      margin-bottom: 20px;
+    }
+    .exam-box:last-child { margin-bottom: 0; }
+    .exam-source {
+      display: inline-block;
+      background: #dbeafe;
+      color: #1e40af;
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 2px 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .question { color: #0f172a; font-size: 0.95rem; font-weight: 500; line-height: 1.85; margin-bottom: 14px; }
+    .q-options { margin-top: 8px; padding-left: 4px; color: #334155; font-weight: 400; }
+    .answer-area label {
+      display: block;
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 7px;
+      font-weight: 500;
+    }
+    .answer-area textarea {
+      width: 100%;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.93rem;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 96px;
+      color: #1e293b;
+      line-height: 1.75;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #ffffff;
+    }
+    .answer-area textarea:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+    /* ── 表格 ── */
+    .table-wrap { overflow-x: auto; margin: 16px 0; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.91rem; }
+    th { background: #1e3a5f; color: #ffffff; padding: 10px 14px; text-align: left; font-weight: 600; }
+    td { border: 1px solid #e2e8f0; padding: 10px 14px; color: #334155; vertical-align: top; }
+    tr:nth-child(even) td { background: #f8fafc; }
+
+    /* ── 自评清单 ── */
+    .checklist {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 14px;
+      padding: 14px 20px;
+      margin-top: 20px;
+    }
+    .checklist p { color: #15803d; font-size: 0.85rem; font-weight: 700; margin-bottom: 8px; }
+    .checklist label { display: flex; align-items: flex-start; gap: 8px; color: #166534; font-size: 0.88rem; margin-bottom: 6px; cursor: pointer; }
+    .checklist input[type="checkbox"] { margin-top: 3px; accent-color: #16a34a; }
+
+    /* ── 页脚 ── */
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 22px;
+      border-top: 1px solid #e2e8f0;
+      color: #94a3b8;
+      font-size: 0.8rem;
+    }
+
+    /* ── 打印 ── */
+    @media print {
+      body { background: white; padding: 0; }
+      .container { box-shadow: none; border-radius: 0; padding: 20px; }
+      .btn-print { display: none; }
+      .module { break-inside: avoid; }
+      .exam-box { break-inside: avoid; }
+    }
+
+    /* ── 响应式 ── */
+    @media (max-width: 600px) {
+      .container { padding: 24px 18px 32px; }
+      .page-header h1 { font-size: 1.5rem; }
+      .module-header h2 { font-size: 1.05rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="toolbar">
+    <button class="btn-print" onclick="window.print()">🖨️ 打印 / 导出PDF</button>
+  </div>
+
+  <div class="page-header">
+    <h1>🎙️ 辩论学案</h1>
+    <div class="meta-row">
+      <span class="version-badge">📖 学生版</span>
+      <span>班级：___________</span>
+      <span>姓名：___________</span>
+      <span>日期：___________</span>
+    </div>
+  </div>
+
+  <div class="standard-bar">
+    <p class="bar-title">📋 课程标准要求（第四学段）</p>
+    <p>根据义务教育语文课程标准（2022年版），第四学段要求学生积极参与讨论，敢于发表自己的意见；听他人说话，把握主要内容，理解对方意图；表达有条理，语气、语调适当；能就适当话题作即席讲话和有准备的主题演讲，有理有据，能够根据需要即席发言，使听者能理解自己的意思。</p>
+  </div>
+
+  <div class="overview">
+    <p class="ov-title">💡 本次学习总览</p>
+    <p>辩论是以驳倒对方观点、确立己方观点为目的的口语交际活动，是初中阶段重要的口语实践形式。本学案共5个模块，依次训练：辩题判断、立论构建、反驳应对、总结陈词，最后综合实战演练。学完后，你将能够独立分析辩题、撰写辩论稿、有理有据地开展辩论。</p>
+  </div>
+
+  <!-- ══════════════ 模块一 ══════════════ -->
+  <div class="module">
+    <div class="module-header">
+      <h2><span class="badge">模块一</span> 辩题判断</h2>
+      <p class="module-goal">学习目标：能识别辩题是否具备争议性、可辩性和现实意义，并能根据反方辩题补写正方辩题</p>
+    </div>
+
+    <div class="knowledge">
+      <h3>📚 知识要点</h3>
+      <p>辩论的起点是一个好辩题。好辩题必须满足三条标准：贴近学生生活、有可辩性（双方各有充分论据，不存在明显正误）、有现实意义和启发性。事实性问题（有标准答案）不适合辩论。</p>
+      <ul>
+        <li><strong>三条标准</strong>：贴近生活 + 有可辩性 + 有现实意义</li>
+        <li><strong>分析辩题4步法</strong>：①圈关键词 → ②做有利于己方的定义 → ③确定比较标准 → ④预判对方反驳</li>
+        <li><strong>补写正方辩题</strong>：观点与反方相反，表述正面，结构如"……是……，值得……"或"……有利于……"</li>
+      </ul>
+      <p style="margin-top:10px;">典型易错点：A"阅读经典很有意义"几乎没有争议，不适合辩论；事实性判断如"叙事者'我'是不是作者"有标准答案，同样不适合。</p>
+    </div>
+
+    <div class="practice">
+      <p class="practice-title">📝 真题训练</p>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年普陀阶段测试 · 第18题</span>
+        <div class="question">
+          学校读书会共读《儒林外史》后，围绕"范进"展开辩论赛。请根据反方辩题，补写正方辩题。（3分）<br>
+          <div class="q-options">
+            正方：______________________________________________________<br>
+            反方：范进是封建科举制度的追随者，不值得同情。
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>我的答案：</label>
+          <textarea placeholder="请写出正方辩题……" style="min-height:72px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2024年杨浦一模 · 第20题（1）</span>
+        <div class="question">
+          下列辩题中，有两个不适合作为比赛辩题，请选出并分别说明理由。（6分）<br>
+          <div class="q-options">
+            A. 阅读经典很有/没有意义<br>
+            B. 电子书阅读利大于弊/弊大于利<br>
+            C. 自媒体时代更容易/不容易接近真相<br>
+            D. 走自己的路，也要听听/不必去管别人怎么说<br>
+            E. 现代社会更需要专才/通才<br>
+            F. 升职加薪主要靠奋斗/靠赏识
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>不适合的两项：______、______&nbsp;&nbsp;&nbsp;理由：</label>
+          <textarea placeholder="选项___，理由：……&#10;选项___，理由：……"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2025年崇明一模 · 第20题</span>
+        <div class="question">
+          为辩论赛拟定的下列辩题，不合适的一项是（&nbsp;&nbsp;&nbsp;）（3分）<br>
+          <div class="q-options">
+            A. 阅读古代神话小说《西游记》有无现实意义<br>
+            B. 《朝花夕拾》中叙事者"我"是不是作者<br>
+            C. "少不看'水浒'"的说法到底有没有道理<br>
+            D. 骆驼祥子的悲剧是否完全由黑暗社会所造成
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>我的答案与理由：</label>
+          <textarea placeholder="答案选（ ），理由：……"></textarea>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <p>✅ 模块一自评</p>
+        <label><input type="checkbox"> 我能说出好辩题的三个标准</label>
+        <label><input type="checkbox"> 我能用4步法分析一个陌生辩题</label>
+        <label><input type="checkbox"> 我能根据反方补写正方辩题</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 模块二 ══════════════ -->
+  <div class="module">
+    <div class="module-header">
+      <h2><span class="badge">模块二</span> 立论构建</h2>
+      <p class="module-goal">学习目标：能运用"四段式"结构，明确立场，搭建论点+论据+论证框架，写出完整立论稿</p>
+    </div>
+
+    <div class="knowledge">
+      <h3>📚 知识要点</h3>
+      <p>立论是辩论的核心，一辩需要开门见山亮出观点，并用分论点+论据加以支撑。论据必须直接指向论点，不能跑题。</p>
+      <ul>
+        <li><strong>四段式结构</strong>：【开场】问候+亮观点 → 【分论点1】+事例/数据 → 【分论点2】+事例/数据 → 【结尾】总结重申</li>
+        <li><strong>辩手分工</strong>：一辩立论；二辩/三辩补充并主攻；四辩总结陈词</li>
+        <li><strong>辩论五原则</strong>：表达清晰·声情并茂 / 观点鲜明·协同作战 / 善于聆听·快速反应 / 语言严谨·简洁有力 / 仪态风度·胜不骄败不馁</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <p class="practice-title">📝 真题训练</p>
+
+      <div class="exam-box">
+        <span class="exam-source">2024年杨浦一模 · 第22题</span>
+        <div class="question">
+          辩题：顺境更有利于成长成才（正方）vs 逆境更有利于成长成才（反方）<br><br>
+          正方一辩论述：孙悟空顺利练就"火眼金睛"，习得"七十二变"，顺利取得"金箍棒"……顺境促进孙悟空提升实力，足以证明顺境更有利于成长成才。<br><br>
+          任务：你是<strong>反方一辩</strong>，请写一段立论稿（100字左右），反驳对方例子并正面论证逆境更有利于成长。
+        </div>
+        <div class="answer-area">
+          <label>我的反方一辩立论稿：</label>
+          <textarea placeholder="我方认为，逆境更有利于成长。对方说……但实际上……" style="min-height:120px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">空中课堂·"以成败论英雄"练习</span>
+        <div class="question">
+          正方论点：①以成败论英雄将追求成功转化为精神追求；②具有广泛现实意义，鼓励全社会积极进取。<br><br>
+          任务：你是<strong>反方一辩</strong>，请写一段立论稿（150字以内），反驳正方并阐明己方观点"以成败论英雄不可取"。
+        </div>
+        <div class="answer-area">
+          <label>我的反方立论稿：</label>
+          <textarea placeholder="我方认为，以成败论英雄是不可取的。第一……第二……" style="min-height:130px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">迁移任务</span>
+        <div class="question">
+          辩题：自媒体时代更容易接近真相（正方）<br><br>
+          任务：写一段正方一辩立论稿（100-150字）。
+        </div>
+        <div class="answer-area">
+          <label>我的正方立论稿：</label>
+          <textarea placeholder="我方认为，自媒体时代更容易接近真相。第一……第二……" style="min-height:130px;"></textarea>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <p>✅ 模块二自评</p>
+        <label><input type="checkbox"> 我的立论稿有明确的开场观点</label>
+        <label><input type="checkbox"> 我至少用了两个分论点，每个都有例子支撑</label>
+        <label><input type="checkbox"> 例子能证明论点，不跑题</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 模块三 ══════════════ -->
+  <div class="module">
+    <div class="module-header">
+      <h2><span class="badge">模块三</span> 反驳应对</h2>
+      <p class="module-goal">学习目标：能快速识别辩论准备与非准备环节，判断论据有效性，为辩题找到有力的反驳论据</p>
+    </div>
+
+    <div class="knowledge">
+      <h3>📚 知识要点</h3>
+      <p>反驳是辩论的核心技能，需要快速抓住对方的逻辑漏洞或论据缺陷，从驳论点、驳论据、驳论证三个方向展开。</p>
+      <ul>
+        <li><strong>反驳三方向</strong>：驳论点（对方观点本身有误）/ 驳论据（对方举例不能证明观点）/ 驳论证（对方推理过程有漏洞）</li>
+        <li><strong>好论据的标准</strong>：必须直接支持己方观点，类型包括：名家评价、相关事实案例、制度规则分析</li>
+        <li><strong>辩论准备环节</strong>：属于准备的有——组织队伍、分析辩题、整理材料、设计提纲、对辩练习；不属于准备的有——调查大众观点、与辩论无关的事务性工作</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <p class="practice-title">📝 真题训练</p>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年普陀阶段测试 · 第19题</span>
+        <div class="question">
+          以下不属于"辩论准备"环节的两项是（&nbsp;&nbsp;&nbsp;）（&nbsp;&nbsp;&nbsp;）（4分）<br>
+          <div class="q-options">
+            A. 组织队伍，确定辩手分工<br>
+            B. 分析辩题，整理相关材料<br>
+            C. 开展调查，参考大众观点<br>
+            D. 分析对手，寻找薄弱目标<br>
+            E. 设计提纲，梳理辩论思路<br>
+            F. 练习对辩，组内互评互议
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>我的答案与分析：</label>
+          <textarea placeholder="选（ ）和（ ），理由：……"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年普陀阶段测试 · 第21题</span>
+        <div class="question">
+          在"自由辩论"环节，以下不适合成为反方（范进不值得同情）论据的一项是（&nbsp;&nbsp;&nbsp;）（3分）<br>
+          <div class="q-options">
+            A. 名家学者对范进这一人物的评价<br>
+            B. 作者吴敬梓在科举制度下的选择<br>
+            C. 对当时科举制度具体规则的调查<br>
+            D. 清代儒生受科举压迫的真实案例
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>我的答案与理由：</label>
+          <textarea placeholder="答案选（ ），理由：……"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2025年崇明一模 · 第21题</span>
+        <div class="question">
+          辩题：接受招安是不是导致水泊梁山失败的根本原因（正方）<br><br>
+          请补充以下辩前准备内容：（5分）<br>
+          <div class="q-options">
+            （1）每个辩手必须把《&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;》读完、读懂、读出心得。<br>
+            （2）重点探寻"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"与"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"之间具有因果关系的内容证据。<br>
+            （3）每个辩手还应该____________________（写出一项辩论技能）。
+          </div>
+        </div>
+        <div class="answer-area">
+          <label>我的答案：</label>
+          <textarea placeholder="（1）《　》&#10;（2）「　」与「　」&#10;（3）……"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">迁移任务</span>
+        <div class="question">
+          辩题：信息时代，碎片化阅读利大于弊/弊大于利（2026年静安一模）<br><br>
+          请为"弊大于利"一方写出两个有力的论据（每个论据一句话）。
+        </div>
+        <div class="answer-area">
+          <label>我的两个论据：</label>
+          <textarea placeholder="论据1：……&#10;论据2：……" style="min-height:96px;"></textarea>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <p>✅ 模块三自评</p>
+        <label><input type="checkbox"> 我能区分辩论准备和非准备环节</label>
+        <label><input type="checkbox"> 我能判断论据是否适合支持观点</label>
+        <label><input type="checkbox"> 我能快速为辩题找到两个有力论据</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 模块四 ══════════════ -->
+  <div class="module">
+    <div class="module-header">
+      <h2><span class="badge">模块四</span> 总结陈词</h2>
+      <p class="module-goal">学习目标：能运用"四步法"撰写总结陈词，做到回应全场、升华价值观、留下深刻印象</p>
+    </div>
+
+    <div class="knowledge">
+      <h3>📚 知识要点</h3>
+      <p>总结陈词是辩论的最后一击，由四辩完成。好的总结陈词不仅要总结己方观点，更要有效回应对方，并将辩题升华到更高的社会/人文价值层面。</p>
+      <ul>
+        <li><strong>四步法</strong>：①提炼核心争议 → ②抓住对方逻辑漏洞 → ③总结本方核心论点 → ④升华价值（社会/人生/时代）</li>
+        <li><strong>好陈词的特征</strong>：观点鲜明、语言有力（善用反问/排比）、升华自然、情感有感染力</li>
+        <li><strong>评价维度</strong>：提炼与概括 / 反驳与针对性 / 逻辑与升华 / 语言与表达</li>
+      </ul>
+    </div>
+
+    <div class="practice">
+      <p class="practice-title">📝 真题训练</p>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年普陀阶段测试 · 第22题</span>
+        <div class="question">
+          根据评价标准，从以下两段反方结辩陈词中选择更合适的一则，并说明理由。（6分）<br><br>
+          <strong>A段：</strong>如我方三辩所述，同情应该给予压迫中的清醒者，而范进是主动将灵魂抵押给科举制度的。对方辩友以"时代局限"为其开脱，但在同一背景下，仍有王冕这样蔑视功名的读书人。现在，我们读《儒林外史》，就是让我们警惕一切形式的思想禁锢，成为时代的"破壁者"，而非"追随者"。<br><br>
+          <strong>B段：</strong>我方认同对方辩友说的"时代局限"，但在同一时代背景中不也有许多清醒的读书人么，他们以自己的学识推动了时代的进步。正如鲁迅先生的评价："秉持公心，指摘时弊"，我们读《儒林外史》，就是要寻找悲剧的根源，以史为鉴，追求人类心灵的自由。
+        </div>
+        <div class="answer-area">
+          <label>我选择（&nbsp;&nbsp;）段，理由：</label>
+          <textarea placeholder="理由1：……&#10;理由2：……"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年徐汇一模 · 第22题</span>
+        <div class="question">
+          即兴辩论环节，请从以下辩题中选择一方，写一段论辩陈词（100字以内）。<br><br>
+          <div class="q-options">
+            正方辩题：《朝花夕拾》的底色是温馨的怀旧。<br>
+            反方辩题：《朝花夕拾》的底色是犀利的讽刺。
+          </div>
+          要求：观点明确、引用书中例子、逻辑自洽、语言有感染力。
+        </div>
+        <div class="answer-area">
+          <label>我的立场（正方 / 反方）及论辩陈词：</label>
+          <textarea placeholder="我选择（正方/反方）&#10;陈词：……" style="min-height:130px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">2026年静安一模 · 第22题</span>
+        <div class="question">
+          辩题：信息时代，碎片化阅读利大于弊/弊大于利<br><br>
+          请选择一方立场，进行主辩陈词（100字左右）。（8分）<br>
+          要求：观点明确1分，理由充分有层次6分，语言流畅条理清晰1分。
+        </div>
+        <div class="answer-area">
+          <label>我的立场（利大于弊 / 弊大于利）及主辩陈词：</label>
+          <textarea placeholder="我方认为……" style="min-height:130px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">迁移任务</span>
+        <div class="question">
+          辩题：网络使人与人之间的距离更近了（正方）/ 更远了（反方）<br><br>
+          假设你是<strong>反方四辩</strong>，写一段总结陈词（150字以内）。<br>
+          要求：①反驳对方至少一个论点；②总结本方核心观点；③升华到人类交往的本质价值。
+        </div>
+        <div class="answer-area">
+          <label>我的反方总结陈词：</label>
+          <textarea placeholder="对方辩友认为……但是……我方始终坚持……" style="min-height:160px;"></textarea>
+        </div>
+      </div>
+
+      <div class="checklist">
+        <p>✅ 模块四自评</p>
+        <label><input type="checkbox"> 我的陈词有明确的核心反驳点</label>
+        <label><input type="checkbox"> 总结了己方一方的重要论点</label>
+        <label><input type="checkbox"> 做了价值升华，不止于辩题本身</label>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ 模块五 ══════════════ -->
+  <div class="module">
+    <div class="module-header">
+      <h2><span class="badge">模块五</span> 综合实战</h2>
+      <p class="module-goal">学习目标：综合运用辩题判断、立论、反驳、总结四项技能，完整参与一场模拟辩论</p>
+    </div>
+
+    <div class="knowledge">
+      <h3>📋 辩论赛标准流程</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>环节</th><th>核心任务</th><th>参与辩手</th><th>时长</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>立论陈词</td><td>完整阐述己方核心论点及论据</td><td>正方一辩 → 反方一辩</td><td>各2分钟</td></tr>
+            <tr><td>攻辩质询</td><td>向对方提问，对方须直接作答</td><td>双方二三辩交叉进行</td><td>各3分钟</td></tr>
+            <tr><td>自由辩论</td><td>轮流发言，快速反驳，攻守结合</td><td>全体辩手</td><td>各4分钟</td></tr>
+            <tr><td>总结陈词</td><td>总结全场，升华价值，争取印象分</td><td>反方四辩 → 正方四辩</td><td>各3分钟</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="practice">
+      <p class="practice-title">📝 综合练习</p>
+
+      <div class="exam-box">
+        <span class="exam-source">综合迁移任务</span>
+        <div class="question">
+          辩题：<strong>网络让人与人之间的距离更远了</strong><br><br>
+          任务：选择正方或反方，写出你的<strong>总结陈词</strong>（不少于150字）。<br>
+          要求：① 回应对方至少一个主要论点；② 强调己方核心价值；③ 语言有感染力，结尾有力。
+        </div>
+        <div class="answer-area">
+          <label>我的立场（正方 / 反方）及总结陈词：</label>
+          <textarea placeholder="各位评委、同学：…" style="min-height:160px;"></textarea>
+        </div>
+      </div>
+
+      <div class="exam-box">
+        <span class="exam-source">角色分工记录</span>
+        <div class="question">
+          模拟辩论前，请填写小组角色分工：
+        </div>
+        <div class="table-wrap" style="margin-top:12px;">
+          <table>
+            <thead>
+              <tr><th>角色</th><th>姓名</th><th>主要任务</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>正方一辩</td><td>　　　　</td><td>立论，开门见山亮观点</td></tr>
+              <tr><td>正方二辩</td><td>　　　　</td><td>补充论证，自由辩论主力</td></tr>
+              <tr><td>正方三辩</td><td>　　　　</td><td>转换论证角度，深化观点</td></tr>
+              <tr><td>正方四辩</td><td>　　　　</td><td>总结陈词，升华价值</td></tr>
+              <tr><td>反方一辩</td><td>　　　　</td><td>立论，开门见山亮观点</td></tr>
+              <tr><td>反方二辩</td><td>　　　　</td><td>补充论证，自由辩论主力</td></tr>
+              <tr><td>反方三辩</td><td>　　　　</td><td>转换论证角度，深化观点</td></tr>
+              <tr><td>反方四辩</td><td>　　　　</td><td>总结陈词，升华价值</td></tr>
+              <tr><td>主持人</td><td>　　　　</td><td>计时、主持流程</td></tr>
+              <tr><td>评委</td><td>　　　　</td><td>按量表打分，点评</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="exam-box" style="margin-top:4px;">
+        <span class="exam-source">⭐ 优秀辩手评价量表（满分50分）</span>
+        <div class="table-wrap" style="margin-top:12px;">
+          <table>
+            <thead>
+              <tr><th>评价维度</th><th>分值</th><th>评分标准</th><th>自评</th><th>组评</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>语言表达</td><td>10分</td><td>普通话标准，口齿清晰，语速适中，有感染力</td><td>　/10</td><td>　/10</td></tr>
+              <tr><td>逻辑反驳</td><td>10分</td><td>快速抓漏洞，反驳有理有据，逻辑严密</td><td>　/10</td><td>　/10</td></tr>
+              <tr><td>论据充分</td><td>10分</td><td>事实、数据、经典案例，具有说服力</td><td>　/10</td><td>　/10</td></tr>
+              <tr><td>团队配合</td><td>10分</td><td>尊重队友，观点一致，衔接流畅自然</td><td>　/10</td><td>　/10</td></tr>
+              <tr><td>仪态风度</td><td>10分</td><td>举止得体，尊重对手，自信大方，情绪稳定</td><td>　/10</td><td>　/10</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    本学案由 AI 教研助手生成 · 建议教师审阅后分发使用 · 生成日期：2026-04-19
+  </footer>
+
+</div>
+</body>
+</html>
